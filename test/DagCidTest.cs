@@ -27,7 +27,7 @@ namespace Ipfs
             Assert.AreEqual("libp2p-key", libp2pKeyCid.ContentType);
 
             // Act & Assert
-            var exception = Assert.ThrowsException<ArgumentException>(() => 
+            var exception = Assert.ThrowsExactly<ArgumentException>(() => 
                 new DagCid { Value = libp2pKeyCid });
             
             Assert.IsTrue(exception.Message.Contains("Cannot store CID-encoded libp2p key as DagCid link"));
@@ -46,7 +46,7 @@ namespace Ipfs
             var dagCid = new DagCid { Value = validCid };
 
             // Act & Assert
-            var exception = Assert.ThrowsException<ArgumentException>(() => 
+            var exception = Assert.ThrowsExactly<ArgumentException>(() => 
                 dagCid.Value = libp2pKeyCid);
             
             Assert.IsTrue(exception.Message.Contains("Cannot store CID-encoded libp2p key as DagCid link"));
@@ -73,7 +73,7 @@ namespace Ipfs
             Cid libp2pKeyCid = "k51qzi5uqu5dlvj2baxnqndepeb86cbk3ng7n3i46uzyxzyqj2xjonzllnv0v8";
 
             // Act & Assert
-            var exception = Assert.ThrowsException<ArgumentException>(() => 
+            var exception = Assert.ThrowsExactly<ArgumentException>(() => 
                 (DagCid)libp2pKeyCid);
             
             Assert.IsTrue(exception.Message.Contains("Cannot cast CID-encoded libp2p key to DagCid"));

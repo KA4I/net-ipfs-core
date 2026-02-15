@@ -1,9 +1,3 @@
 <Project>
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <langversion>10.0</langversion>
-  </PropertyGroup>
-
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))" />
 </Project>

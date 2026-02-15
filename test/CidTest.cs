@@ -162,7 +162,7 @@ namespace Ipfs
                 Encoding = "base58btc",
                 Hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4"
             };
-            Assert.ThrowsException<KeyNotFoundException>(() => cid.Encode());
+            Assert.ThrowsExactly<KeyNotFoundException>(() => cid.Encode());
         }
 
         [TestMethod]
@@ -175,7 +175,7 @@ namespace Ipfs
                 Encoding = "unknown",
                 Hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4"
             };
-            Assert.ThrowsException<KeyNotFoundException>(() => cid.Encode());
+            Assert.ThrowsExactly<KeyNotFoundException>(() => cid.Encode());
         }
 
         [TestMethod]
@@ -193,7 +193,7 @@ namespace Ipfs
         public void Decode_V0_Invalid()
         {
             var hash = "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39?";
-            Assert.ThrowsException<FormatException>(() => Cid.Decode(hash));
+            Assert.ThrowsExactly<FormatException>(() => Cid.Decode(hash));
         }
 
         [TestMethod]
@@ -207,7 +207,7 @@ namespace Ipfs
                 Hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4"
             };
             var s = cid.Encode();
-            Assert.ThrowsException<FormatException>(() => Cid.Decode(s));
+            Assert.ThrowsExactly<FormatException>(() => Cid.Decode(s));
         }
 
         [TestMethod]
@@ -238,14 +238,14 @@ namespace Ipfs
         public void Decode_V1_Invalid_MultiBase_String()
         {
             var id = "zb2rhj7crUKTQYRGCRATFaQ6YFLTde2YzdqbbhAASkL9uRDX?";
-            Assert.ThrowsException<FormatException>(() => Cid.Decode(id));
+            Assert.ThrowsExactly<FormatException>(() => Cid.Decode(id));
         }
 
         [TestMethod]
         public void Decode_V1_Invalid_MultiBase_Code()
         {
             var id = "?";
-            Assert.ThrowsException<FormatException>(() => Cid.Decode(id));
+            Assert.ThrowsExactly<FormatException>(() => Cid.Decode(id));
         }
 
         [TestMethod]

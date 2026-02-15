@@ -1,11 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;</TargetFrameworks>
         <AssemblyName>IpfsShipyard.Ipfs.Core</AssemblyName>
         <RootNamespace>Ipfs</RootNamespace>
-        <DebugType>portable</DebugType>
-        <LangVersion>12.0</LangVersion>
 
         <!-- https://semver.org/spec/v2.0.0.html -->
         <Version>0.8.0</Version>
@@ -121,24 +118,12 @@ Added missing IFileSystemApi.ListAsync. Doesn't fully replace the removed IFileS
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Google.Protobuf" Version="3.26.1" />
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.8" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="PolySharp" Version="1.14.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <!-- NOTE:
-          Bumped to 1.9.0 in PR #52, but SHAKE-128 began defaulting to 32-byte output via the
-          generic IDigest path, breaking tests expecting 16 bytes (per multihash fixtures).
-          Pinning to 1.8.5 until we add an IXof-aware wrapper that emits Algorithm.DigestSize
-          for SHAKE (16 for shake-128, 32 for shake-256), then we can safely re-upgrade.
-          See CI failures: MultiHashTest/HashingTest around SHAKE-128 digest length.
-        -->
-        <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
-        <PackageReference Include="SimpleBase" Version="1.3.1" />
-        <PackageReference Include="Grpc.Tools" Version="2.62.0" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+        <PackageReference Include="Google.Protobuf" Version="3.33.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
+        <PackageReference Include="SimpleBase" Version="5.6.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.78.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All" />
     </ItemGroup>
 
     <ItemGroup>

@@ -136,5 +136,14 @@ namespace Ipfs.CoreApi
         /// Custom POSIX modification time (optional time fraction in nanoseconds).
         /// </summary>
         public uint? MtimeNsecs { get; set; }
+
+        /// <summary>
+        ///   The key name used to protect (encrypt) the file's data blocks.
+        /// </summary>
+        /// <value>
+        ///   A key name in the IPFS key store.  When set, each data block is encrypted
+        ///   using CMS (Cryptographic Message Syntax) with the named key.
+        /// </value>
+        public string? ProtectionKey { get; set; }
     }
 }

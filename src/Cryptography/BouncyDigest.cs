@@ -13,13 +13,15 @@ namespace Ipfs.Cryptography
     internal class BouncyDigest : System.Security.Cryptography.HashAlgorithm
     {
         private readonly Org.BouncyCastle.Crypto.IDigest _digest;
+        private readonly int _outputSize;
 
         /// <summary>
         ///   Wrap the bouncy castle digest.
         /// </summary>
-        public BouncyDigest(Org.BouncyCastle.Crypto.IDigest digest)
+        public BouncyDigest(Org.BouncyCastle.Crypto.IDigest digest, int outputSize = 0)
         {
             _digest = digest;
+            _outputSize = outputSize > 0 ? outputSize : digest.GetDigestSize();
         }
 
         /// <inheritdoc/>
@@ -39,6 +41,8 @@ namespace Ipfs.Cryptography
         {
             var output = new byte[_digest.GetDigestSize()];
             _digest.DoFinal(output, 0);
+            if (_outputSize < output.Length)
+                return output[.._outputSize];
             return output;
         }
     }

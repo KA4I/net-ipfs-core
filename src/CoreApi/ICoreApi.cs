@@ -148,5 +148,13 @@ namespace Ipfs.CoreApi
         ///   An object that implements <see cref="ISwarmApi"/>.
         /// </value>
         ISwarmApi Swarm { get; }
+
+        /// <summary>
+        ///   Provides access to the Filestore API.
+        /// </summary>
+        /// <value>
+        ///   An object that implements <see cref="IFilestoreApi"/>.
+        /// </value>
+        IFilestoreApi Filestore { get; }
     }
 }

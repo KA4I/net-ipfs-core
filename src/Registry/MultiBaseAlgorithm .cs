@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Ipfs.Registry
 {
@@ -43,39 +44,39 @@ namespace Ipfs.Registry
                 bytes => bytes.ToBase64Url(),
                 s => s.FromBase64Url());
             Register("base16", 'f',
-                bytes => SimpleBase.Base16.EncodeLower(bytes),
-                s => SimpleBase.Base16.Decode(s));
+                bytes => SimpleBase.Base16.LowerCase.Encode(bytes),
+                s => SimpleBase.Base16.LowerCase.Decode(s).ToArray());
             Register("base32", 'b',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false).ToLowerInvariant(),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.Rfc4648, s, Rfc4648Chars));
             Register("base32pad", 'c',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, true).ToLowerInvariant(),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.Rfc4648, s, Rfc4648Chars));
             Register("base32hex", 'v',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, false).ToLowerInvariant(),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.ExtendedHex, s, ExtendedHexChars));
             Register("base32hexpad", 't',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true).ToLowerInvariant(),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.ExtendedHex, s, ExtendedHexChars));
             Register("base36", 'k', Base36.EncodeToStringLc, Base36.DecodeString);
             Register("BASE16", 'F',
-                bytes => SimpleBase.Base16.EncodeUpper(bytes),
-                s => SimpleBase.Base16.Decode(s));
+                bytes => SimpleBase.Base16.UpperCase.Encode(bytes),
+                s => SimpleBase.Base16.UpperCase.Decode(s).ToArray());
             Register("BASE32", 'B',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.Rfc4648, s, Rfc4648Chars));
             Register("BASE32PAD", 'C',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, true),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.Rfc4648, s, Rfc4648Chars));
             Register("BASE32HEX", 'V',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, false),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.ExtendedHex, s, ExtendedHexChars));
             Register("BASE32HEXPAD", 'T',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => StrictBase32Decode(SimpleBase.Base32.ExtendedHex, s, ExtendedHexChars));
             Register("base32z", 'h',
                 bytes => Base32z.Codec.Encode(bytes, false),
-                s => Base32z.Codec.Decode(s));
+                s => StrictBase32Decode(Base32z.Codec, s, Base32zChars));
             // Not supported
 #if false
             Register("base1", '1');
@@ -124,6 +125,27 @@ namespace Ipfs.Registry
         public override string ToString()
         {
             return Name;
+        }
+
+        private static readonly HashSet<char> Rfc4648Chars = new(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz234567=");
+        private static readonly HashSet<char> ExtendedHexChars = new(
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVabcdefghijklmnopqrstuv=");
+        private static readonly HashSet<char> Base32zChars = new(
+            "ybndrfg8ejkmcpqxot1uwisza345h769");
+
+        /// <summary>
+        ///   Strictly decode a Base32 string, validating that all characters belong to the expected alphabet.
+        /// </summary>
+        /// <remarks>
+        ///   SimpleBase 5.x silently ignores invalid Base32 characters instead of throwing.
+        ///   This wrapper restores strict validation.
+        /// </remarks>
+        private static byte[] StrictBase32Decode(SimpleBase.Base32 codec, string s, HashSet<char> validChars)
+        {
+            if (s.Length > 0 && !s.All(validChars.Contains))
+                throw new FormatException($"Invalid character in base32 string.");
+            return codec.Decode(s);
         }
 
         /// <summary>
